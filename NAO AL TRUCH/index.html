@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NAO AL TRUCH - Nazionale Bocce</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* ===== RESET E VARIABILI CSS ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #1a365d;
+            --secondary-color: #2c5282;
+            --accent-color: #4299e1;
+            --light-color: #ffffff;
+            --text-color: #2d3748;
+            --text-light: #718096;
+            --background-light: #f7fafc;
+            --font-primary: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-size-xl: 3.5rem;
+            --font-size-lg: 2.5rem;
+            --font-size-md: 1.5rem;
+            --font-size-base: 1rem;
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 2rem;
+            --spacing-lg: 4rem;
+            --spacing-xl: 6rem;
+            --transition-fast: 0.3s ease;
+            --transition-slow: 0.6s ease;
+        }
+
+        /* ===== STILI GENERALI ===== */
+        body {
+            font-family: var(--font-primary);
+            line-height: 1.6;
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-sm);
+        }
+
+        .section {
+            padding: var(--spacing-xl) 0;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all var(--transition-slow);
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-size: var(--font-size-lg);
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+            color: var(--primary-color);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--accent-color);
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: var(--spacing-sm) 0;
+            transition: all var(--transition-fast);
+            background: rgba(26, 54, 93, 0.6);
+            backdrop-filter: blur(10px);
+        }
+
+
+        .navbar.scrolled {
+            background: rgba(26, 54, 93, 0.95);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* MODIFICHE AL LOGO */
+        .logo-img {
+            height: 68px; /* 85% dell'altezza della navbar */
+            width: auto;
+            object-fit: contain;
+            /* Rimosso border-radius e box-shadow per eliminare cerchio e rettangolo */
+            transition: transform var(--transition-fast);
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+        }
+
+        .logo-img:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+        /* FINE MODIFICHE AL LOGO */
+
+        .logo {
+            font-size: var(--font-size-md);
+            font-weight: bold;
+            color: var(--light-color);
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: var(--spacing-md);
+        }
+
+        .nav-link {
+            color: var(--light-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color var(--transition-fast);
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-color);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-color);
+            transition: width var(--transition-fast);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--light-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(26, 54, 93, 0.4), rgba(26, 54, 93, 0.4)), 
+                        url('tavolo2.jpg') center/cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--light-color);
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            animation: fadeInUp 1s ease-out;
+            position: relative;
+        }
+
+        /* EFFETTO SATINATO DIETRO AL TESTO */
+
+
+        .hero-title {
+            margin-top:130px;
+            background-color: transparent; /* semi-trasparente */
+            backdrop-filter: blur(10px);               /* sfocatura vera e propria */
+            -webkit-backdrop-filter: blur(10px); 
+            box-shadow: 0 0 10px white;
+            border-radius: 5px;
+            height:80px;
+            width:520px;
+            justify-content: center; /* centro orizzontale */
+            align-items: center;     /* centro verticale */
+            font-size: var(--font-size-xl);
+            font-weight: bold;
+            margin-bottom: var(--spacing-md);
+            
+
+            position: relative;
+            z-index: 1;
+            margin-left:170px;
+            transition:1s;
+
+
+            text-shadow: 2px 2px 5px black;
+            text-shadow: 2px 2px 3px black;
+        }
+        .hero-title:hover{
+            font-size: 60px;
+            text-shadow: 2px 2px 10px white;
+            text-shadow: 2px 2px 5px black;
+
+            height:95px;
+            width:570px;
+        }
+
+
+
+        .hero-subtitle {
+            justify-content: center; /* centro orizzontale */
+            align-items: center;     /* centro verticale */
+            background-color: transparent; /* semi-trasparente */
+            backdrop-filter: blur(10px);               /* sfocatura vera e propria */
+            -webkit-backdrop-filter: blur(10px); 
+            box-shadow: 0 0 10px white;
+            border-radius: 5px;
+            height: 35px;
+            margin-left:170px;
+            margin-top: 20px;
+            font-family: 'Playfair Display', serif;
+            font-size: 15px;
+            margin-bottom: var(--spacing-lg);
+            opacity: 0.95;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 1;
+            transition:1s;
+        }
+
+        /* ===== SEZIONE STORIA ===== */
+        .storia {
+            background: var(--background-light);
+        }
+
+        .storia-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-lg);
+            align-items: center;
+        }
+
+        .storia-text {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            color: var(--text-color);
+        }
+
+        /* MODIFICHE ALL'IMMAGINE STORIA */
+        .storia-image {
+            width: 100%;
+            height: 400px;
+            background: none; /* Rimosso lo sfondo */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Rimossi border-radius e box-shadow */
+            transition: transform var(--transition-slow);
+        }
+
+        .storia-image img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        .storia-image:hover {
+            transform: scale(1.02) translateY(-5px);
+        }
+        /* FINE MODIFICHE ALL'IMMAGINE STORIA */
+
+        /* ===== SEZIONE REGOLE ===== */
+        .regole-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-md);
+        }
+     
+
+        .regola-card {
+            background: var(--light-color);
+            padding: var(--spacing-md);
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: all var(--transition-fast);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+
+        .regola-card:hover {
+            transform: translateY(-10px);
+            border-bottom: 3px solid var(--accent-color);
+            box-shadow: 0 15px 30px rgba(66, 153, 225, 0.2);
+        }
+
+        .regola-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--spacing-sm);
+            color: var(--light-color);
+            font-size: 1.5rem;
+            transition: transform var(--transition-fast);
+        }
+
+        .regola-card:hover .regola-icon {
+            transform: scale(1.1) rotate(10deg);
+            background: var(--accent-color);
+        }
+
+        .regola-title {
+            font-size: var(--font-size-md);
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        /* ===== SEZIONE CONTATTI ===== */
+        .contatti {
+            background: var(--background-light);
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-lg);
+        }
+
+        .social-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: all var(--transition-fast);
+        }
+
+        .social-icon:hover {
+            transform: translateY(-10px);
+        }
+
+        .social-icon img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: var(--spacing-sm);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all var(--transition-fast);
+        }
+
+        .social-icon:hover img {
+            box-shadow: 0 10px 25px rgba(66, 153, 225, 0.4);
+        }
+
+        .social-icon span {
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .contatti-info {
+            background: var(--light-color);
+            padding: var(--spacing-md);
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: var(--spacing-lg) auto 0;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: var(--secondary-color);
+            color: var(--light-color);
+            text-align: center;
+            padding: var(--spacing-md) 0;
+        }
+
+        /* ===== ANIMAZIONI ===== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            /* MODIFICHE AL LOGO PER MOBILE */
+            .logo-img {
+                height: 56px; /* 85% dell'altezza della navbar su mobile */
+            }
+            /* FINE MODIFICHE AL LOGO PER MOBILE */
+            
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--primary-color);
+                flex-direction: column;
+                padding: var(--spacing-md);
+                gap: var(--spacing-sm);
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .storia-content {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                padding: var(--spacing-md) 0;
+            }
+
+            .container {
+                padding: 0 var(--spacing-sm);
+            }
+
+            .social-icons {
+                flex-direction: column;
+                align-items: center;
+                gap: var(--spacing-md);
+            }
+
+            /* EFFETTO SATINATO RESPONSIVE */
+            .hero-content::before {
+                top: -20px;
+                left: -20px;
+                right: -20px;
+                bottom: -20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            /* MODIFICHE AL LOGO PER MOBILE PICCOLO */
+            .logo-img {
+                height: 48px; /* 85% dell'altezza della navbar su mobile piccolo */
+            }
+            /* FINE MODIFICHE AL LOGO PER MOBILE PICCOLO */
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .regole-grid {
+                grid-template-columns: 1fr;
+            }
+
+            /* EFFETTO SATINATO MOBILE PICCOLO */
+            .hero-content::before {
+                top: -15px;
+                left: -15px;
+                right: -15px;
+                bottom: -15px;
+                border-radius: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="logo-container">
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logogrande-4lONJWuiBUONlPWPMhnT0xbD3OlwhT.png" alt="NAO AL TRUCH Logo" class="logo-img">
+                <a href="#home" class="logo">Nao al truch</a>
+            </div>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="#home" class="nav-link">HOME</a></li>
+                <li><a href="#storia" class="nav-link">STORIA</a></li>
+                <li><a href="#regole" class="nav-link">REGOLE</a></li>
+                <li><a href="staff.html" class="nav-link">STAFF</a></li>
+                <li><a href="galleria.html" class="nav-link">GALLERIA</a></li>
+                <li><a href="punteggi.html" class="nav-link">PUNTEGGI</a></li>
+                <li><a href="#contatti" class="nav-link">CONTATTI</a></li>
+            </ul>
+            <button class="mobile-menu-toggle" id="mobile-toggle">☰</button>
+        </div>
+    </nav>
+
+    <!-- ===== HERO SECTION ===== -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">NAO AL TRUCH</h1>
+            <p class="hero-subtitle">La passione delle bocce, l'eccellenza della tradizione</p>
+        </div>
+    </section>
+
+    <!-- ===== SEZIONE STORIA ===== -->
+    <section id="storia" class="section storia">
+        <div class="container">
+            <h2 class="section-title">Un po di storia</h2>
+            <div class="storia-content">
+                <div class="storia-text">
+                    <p>Il gioco delle bocce ha origini antiche risalenti all'impero romano, questo sport è amato in tutto il mondo per la sua semplicità e il suo carattere inclusivo.Il primo regolamento ufficiale è stato rilasciato da un italiano nel 1753, il gioco si è evoluto fino alla versione attuale in Italia, per poi diffondersi in tutto il mondo. La Francia e l'Italia furono i paesi che per primi cercarono di trasformare il gioco in uno sport. </p>
+                    </div>
+                <div class="storia-image">
+                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/napoleone.jpg-O4TpFdFVK7orhVoyWNvuYoBcwkYXip.jpeg" alt="Robot Napoleone con bocce">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SEZIONE REGOLE ===== -->
+    <section id="regole" class="section regole">
+        <div class="container">
+            <h2 class="section-title">Regole del Gioco</h2>
+            <div class="regole-grid">
+                <div class="regola-card">
+                    <div class="regola-icon">🎯</div>
+                    <h3 class="regola-title">Obiettivo del gioco</h3>
+                    <p>L'obiettivo è avvicinare le proprie bocce il più possibile al pallino (boccino), la sfera più piccola che funge da bersaglio. Vince chi accumula più punti nelle manche stabilite.</p>
+                </div>
+                <div class="regola-card">
+                    <div class="regola-icon">🎲</div>
+                    <h3 class="regola-title">Svolgimento</h3>
+                    <p> I giocatori si alternano nel lancio delle bocce. Chi non ha la boccia più vicina al pallino continua a giocare fino a quando non la conquista.</p>
+                </div>
+                
+                
+                <div class="regola-card">
+                    <div class="regola-icon">📏</div>
+                    <h3 class="regola-title">Campo di gioco</h3>
+                    <p>Il campo è lungo 15,0m e largo 2,0m, delimitato da sponde. La superficie deve essere piana e uniforme.</p>
+                </div>
+                
+            
+                <div class="regola-card">
+                    <div class="regola-icon">🏆</div>
+                    <h3 class="regola-title">Punteggio</h3>
+                    <p>A fine manche si contano i punti: 1 punto per ogni boccia più vicina al pallino rispetto alla migliore dell'avversario. Si gioca fino a 12 punti o al numero di manche prestabilito.</p>
+                </div>
+
+                <div class="regola-card">
+                    <div class="regola-icon">⚡</div>
+                    <h3 class="regola-title">Tecniche di lancio</h3>
+                    <p>Esistono diverse tecniche:
+                        puntata (avvicinamento al pallino), 
+                        bocciata (colpire bocce avversarie), 
+                        sponda (uso delle sponde), 
+                        volo (lancio aereo). 
+                        Ogni tecnica richiede precisione e strategia.</p>
+                </div>  
+
+                <div class="regola-card">
+                    <div class="regola-icon">♿</div>
+                    <h3 class="regola-title">Inclusività</h3>
+                    <p>abbiamo organizzato tutto in modo tale di dare la possibilità anche alle persone su sedia a rotelle di giocare<p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SEZIONE CONTATTI ===== -->
+    <section id="contatti" class="section contatti">
+        <div class="container">
+            <h2 class="section-title">Contattaci</h2>
+            
+            <div class="social-icons">
+                <a href="https://www.instagram.com/nao_al_truch/" class="social-icon">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.png/600px-Instagram_icon.png" alt="Instagram">
+                    <span>Instagram</span>
+                </a>
+                
+                <a href="https://www.youtube.com/channel/UC2YtMLOXcyzLszuJrYxFAKg" class="social-icon">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/YouTube_full-color_icon_%282017%29.svg/800px-YouTube_full-color_icon_%282017%29.svg.png" alt="YouTube">
+                    <span>YouTube</span>
+                </a>
+                
+                <a href="https://mail.google.com/mail/u/0/#inbox?compose=CllgCJZdkmJMFpxDhHTFfZSzkZGxsCHRrRzcCdwhrlLkKbHMfXcrcjMxlqJcFnjzfPZGZjkKnPg" class="social-icon">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Gmail_icon_%282020%29.svg/2560px-Gmail_icon_%282020%29.svg.png" alt="Gmail">
+                    <span>Gmail</span>
+                </a>
+            </div>
+            
+            <div class="contatti-info">
+                <h3>Informazioni di Contatto</h3>
+                <p><strong>Indirizzo:</strong><br>Corso Alcide De Gasperi 30<br>12100 Cuneo (CN)</p>
+                <p><strong>Telefono:</strong><br>+39 327 906 2622</p>
+                <p><strong>Email:</strong><br>naoaltruch2025@gmail.it</p>
+                <p><strong>instagram:</strong><br>nao_al_truch</p>
+                <p><strong>canale youtube:</strong><br>NAO-AL-TRUCH</p>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 NAO AL TRUCH - Tutti i diritti riservati. Sito web creato con passione per le bocce.</p>
+        </div>
+    </footer>
+
+    <script>
+        // ===== GESTIONE NAVBAR SCROLL =====
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // ===== MENU MOBILE =====
+        const mobileToggle = document.getElementById('mobile-toggle');
+        const navMenu = document.getElementById('nav-menu');
+
+        mobileToggle.addEventListener('click', function() {
+            navMenu.classList.toggle('active');
+        });
+
+        // Chiudi menu mobile quando si clicca su un link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // ===== SMOOTH SCROLL =====
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // ===== SCROLL REVEAL ANIMAZIONI =====
+        function revealOnScroll() {
+            const sections = document.querySelectorAll('.section');
+            const windowHeight = window.innerHeight;
+            
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                const revealPoint = 150;
+                
+                if (sectionTop < windowHeight - revealPoint) {
+                    section.classList.add('visible');
+                }
+            });
+        }
+
+        // Esegui al caricamento e durante lo scroll
+        window.addEventListener('scroll', revealOnScroll);
+        window.addEventListener('load', revealOnScroll);
+
+        // ===== INIZIALIZZAZIONE =====
+        document.addEventListener('DOMContentLoaded', function() {
+            // Esegui reveal iniziale
+            revealOnScroll();
+            
+            // Aggiungi classe loaded al body per eventuali animazioni CSS
+            document.body.classList.add('loaded');
+            
+            console.log('Sito NAO AL TRUCH caricato con successo!');
+        });
+    </script>
+</body>
+</html>
